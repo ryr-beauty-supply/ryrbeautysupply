@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R&R - BEAUTY SUPPLY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --blanco: #ffffff;
+            --negro: #121212;
+            --negro-fondo: #0a0a0a;
+            --gris-claro: #f8f9fa;
+            --gris-medio: #e0e0e0;
+            --gris-oscuro: #555555;
+            --rojo: #e20613;
+            --cian: #00bcd4;
+            --verde-wa: #25D366;
+            --sombra-suave: 0 10px 30px rgba(0,0,0,0.08);
+            --fuente-base: 'Poppins', sans-serif;
+            --transicion: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--fuente-base);
+            font-size: 15px;
+            color: var(--negro);
+            line-height: 1.6;
+            background-color: var(--gris-claro);
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: var(--transicion); }
+        ul { list-style: none; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        .contenedor { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+        @media (min-width: 768px) { .contenedor { padding: 0 40px; } }
+
+        /* --- Header --- */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gris-medio);
+            padding: 15px 0; position: fixed; top: 0; width: 100%; z-index: 1000; transition: var(--transicion);
+        }
+        header.scrolled { padding: 5px 0; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .logo-central { max-height: 60px; transition: var(--transicion); } 
+        header.scrolled .logo-central { max-height: 45px; }
+
+        .iconos-derecha { display: flex; gap: 20px; font-size: 1.2rem; color: var(--negro); }
+        .iconos-derecha i { cursor: pointer; transition: var(--transicion); }
+        .iconos-derecha i:hover { color: var(--rojo); }
+
+        .nav-list { display: flex; justify-content: center; gap: 30px; text-transform: uppercase; font-weight: 600; font-size: 13px; letter-spacing: 1px; }
+        .nav-item { position: relative; padding: 10px 0; cursor: pointer; }
+        .nav-item > a { position: relative; padding-bottom: 5px; }
+        .nav-item > a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 0; background-color: var(--rojo); transition: var(--transicion); }
+        .nav-item:hover > a::after { width: 100%; }
+        .nav-item > a:hover { color: var(--rojo); }
+
+        /* Mega Menú */
+        .mega-menu {
+            opacity: 0; visibility: hidden; transform: translateY(15px); position: absolute; left: 50%; transform: translateX(-50%) translateY(15px); top: 100%; width: 90vw; max-width: 1200px; background-color: var(--blanco); box-shadow: var(--sombra-suave); padding: 30px; border-radius: 12px; border: 1px solid var(--gris-medio); z-index: 999; transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .nav-item:hover .mega-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        .mega-menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
+        .mega-col h6 { color: var(--rojo); font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 15px; font-weight: 700; }
+        .mega-col h6.clickable { cursor: pointer; color: var(--negro); border-bottom: 1px solid var(--gris-medio); padding-bottom: 5px; }
+        .mega-col h6.clickable:hover { color: var(--rojo); border-color: var(--rojo); }
+        .mega-col ul li { margin-bottom: 10px; }
+        .mega-col ul li a { color: var(--gris-oscuro); font-size: 13px; font-weight: 400; }
+        .mega-col ul li a:hover { color: var(--rojo); padding-left: 5px; }
+        .mega-imagen { border-radius: 8px; height: 100%; min-height: 250px; overflow: hidden; position: relative; }
+        .mega-imagen img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .mega-imagen:hover img { transform: scale(1.05); }
+
+        /* --- Slider --- */
+        .seccion-heroe { position: relative; height: 100vh; min-height: 600px; background-color: var(--negro-fondo); overflow: hidden; margin-top: 100px; }
+        .slider-wrapper { position: relative; width: 100%; height: 100%; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease-in-out; display: flex; align-items: center; }
+        .slide.activo { opacity: 1; z-index: 1; }
+        .slide img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; filter: brightness(0.6); }
+        .heroe-contenido { position: relative; z-index: 2; width: 100%; padding: 0 10%; color: var(--blanco); }
+        .heroe-contenido h1 { font-size: clamp(3rem, 5vw, 5rem); text-transform: uppercase; font-weight: 700; line-height: 1.1; margin-bottom: 20px; transform: translateY(30px); opacity: 0; transition: all 0.8s ease 0.3s; }
+        .slide.activo .heroe-contenido h1 { transform: translateY(0); opacity: 1; }
+        
+        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2); color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 20px; cursor: pointer; z-index: 10; backdrop-filter: blur(5px); transition: var(--transicion); }
+        .slider-btn:hover { background: var(--rojo); }
+        .slider-prev { left: 20px; }
+        .slider-next { right: 20px; }
+        .slider-dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; transition: var(--transicion); }
+        .dot.activo { background: var(--blanco); transform: scale(1.2); }
+
+        /* --- Secciones Comunes --- */
+        .seccion-padding { padding: 100px 0; }
+        .bg-blanco { background-color: var(--blanco); }
+        .bg-negro { background-color: var(--negro-fondo); color: var(--blanco); }
+        .titulo-seccion { text-align: center; font-size: 2.5rem; margin-bottom: 60px; font-weight: 700; text-transform: uppercase; position: relative; }
+        .titulo-seccion::after { content: ''; display: block; width: 60px; height: 4px; background-color: var(--rojo); margin: 15px auto 0; border-radius: 2px; }
+
+        .cuadricula-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        .cuadro-producto { background: var(--blanco); border: 1px solid var(--gris-medio); padding: 30px; border-radius: 16px; text-align: center; cursor: pointer; transition: var(--transicion); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .cuadro-producto:hover { transform: translateY(-10px); box-shadow: var(--sombra-suave); border-color: transparent; }
+        .imagen-blanca-interior { background-color: var(--blanco); height: 250px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+        .imagen-blanca-interior img { max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.3s; }
+        .cuadro-producto:hover .imagen-blanca-interior img { transform: scale(1.08); }
+
+        /* Instagram y Video */
+        .cuadricula-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1100px; margin: 0 auto 40px; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 16px; overflow: hidden; box-shadow: var(--sombra-suave); }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        /* --- Mapa y Footer --- */
+        .seccion-contactos { position: relative; height: 600px; width: 100%; background-color: var(--gris-medio); }
+        .mapa-iframe { width: 100%; height: 100%; border: none; filter: grayscale(0.3); }
+        .tarjeta-contacto { position: absolute; top: 50%; transform: translateY(-50%); left: 5%; background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 40px; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: var(--sombra-suave); z-index: 10; }
+        .tarjeta-contacto h2 { font-size: 1.8rem; margin-bottom: 20px; font-weight: 700; color: var(--negro); }
+        .tarjeta-contacto p { margin-bottom: 15px; font-size: 15px; color: var(--gris-oscuro); display: flex; align-items: flex-start; gap: 10px;}
+        .tarjeta-contacto i { color: var(--rojo); margin-top: 4px; }
+        .tarjeta-contacto .destacado { font-weight: 600; color: var(--negro); }
+
+        footer { background-color: var(--negro); color: #999; padding: 80px 0 40px; font-size: 13px; border-top: 4px solid var(--rojo);}
+        .cuadricula-footer { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
+        .col-footer h6 { color: var(--blanco); font-weight: 600; margin-bottom: 25px; font-size: 14px; letter-spacing: 1px; }
+        .col-footer ul li { margin-bottom: 12px; cursor: pointer; transition: color 0.3s; }
+        .col-footer ul li:hover { color: var(--rojo); }
+        .social-iconos { display: flex; gap: 15px; margin-top: 15px; }
+        .social-iconos a { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: #333; border-radius: 50%; color: white; font-size: 16px; transition: var(--transicion); }
+        .social-iconos a:hover { background: var(--rojo); transform: translateY(-3px); }
+
+        /* --- MODALS --- */
+        .modal-oculto { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); overflow-y: auto; padding: 40px 20px;}
+        .modal-contenido { background-color: var(--blanco); margin: auto; padding: 50px; border-radius: 20px; width: 100%; max-width: 800px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);}
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-contenido-oscuro { background-color: var(--negro); max-width: 1200px; color: var(--blanco); border: 1px solid #333;} 
+        
+        .cerrar-modal { position: absolute; top: 20px; right: 25px; background: var(--gris-claro); color: var(--negro); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 20px; cursor: pointer; transition: var(--transicion); z-index: 10;}
+        .modal-contenido-oscuro .cerrar-modal { background: #333; color: white; }
+        .cerrar-modal:hover { background: var(--rojo); color: white; transform: rotate(90deg); }
+        .modal-contenido h2 { text-align: center; margin-bottom: 40px; border-bottom: 2px solid var(--rojo); padding-bottom: 15px; display: inline-block; left: 50%; position: relative; transform: translateX(-50%);}
+        .modal-contenido-oscuro h2 { border-color: var(--rojo); }
+
+        .info-bloque { margin-bottom: 30px; background: var(--gris-claro); padding: 25px; border-radius: 12px;}
+        .info-bloque h3 { color: var(--rojo); font-size: 18px; margin-bottom: 15px; font-weight: 600;}
+        .info-bloque p, .info-bloque ul { color: var(--gris-oscuro); font-size: 15px; }
+        .info-bloque ul li { margin-bottom: 8px; display: flex; align-items: center; gap: 10px;}
+
+        /* --- TARJETAS INTERNAS DE PRODUCTOS --- */
+        .mas-vendido-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; margin-top: 30px; }
+        .mas-vendido-item { background-color: #1a1a1a; padding: 25px 20px; border-radius: 16px; text-align: center; transition: var(--transicion); border: 1px solid #333; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center;}
+        
+        /* Efecto Hover rojo mantenido */
+        .mas-vendido-item:hover { transform: translateY(-8px); border-color: var(--rojo); box-shadow: 0 10px 20px rgba(226, 6, 19, 0.15); }
+        
+        .mas-vendido-item img { width: 100%; height: 180px; object-fit: contain; margin-bottom: 20px; background: white; border-radius: 8px; padding: 10px; transition: transform 0.4s;}
+        .mas-vendido-item:hover img { transform: scale(1.05); }
+        .mas-vendido-item h3 { font-size: 1.1rem; font-weight: 500; color: var(--blanco); margin: 0;}
+
+        /* Menu Móvil */
+        .menu-toggle { display: none; font-size: 24px; cursor: pointer; }
+        @media (max-width: 992px) {
+            .nav-list { display: none; flex-direction: column; width: 100%; position: absolute; top: 100%; left: 0; background: white; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+            .nav-list.active { display: flex; }
+            .menu-toggle { display: block; }
+            .mega-menu { position: static; width: 100%; transform: none; box-shadow: none; border: none; padding: 10px 0; display: none; opacity: 1; visibility: visible;}
+            .nav-item:hover .mega-menu { display: block; transform: none;}
+            .mega-imagen { display: none; }
+        }
+
+        /* --- BOTONES FLOTANTES FUNCIONALES --- */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px; height: 60px;
+            bottom: 40px; right: 40px;
+            background-color: var(--verde-wa);
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        .whatsapp-float:hover { transform: scale(1.1); color: white;}
+
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 120px; right: 45px;
+            background-color: var(--negro);
+            color: white;
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0; visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 99;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            border: 2px solid #333;
+        }
+        .scroll-top-btn.visible { opacity: 1; visibility: visible; }
+        .scroll-top-btn:hover { background-color: var(--rojo); border-color: var(--rojo); }
+
+    </style>
+</head>
+<body>
+
+    <header id="main-header">
+        <div class="contenedor">
+            <div class="header-top">
+                <img src="width_800.jpg" alt="R&R Beauty Supply Logo" class="logo-central"> 
+                <div class="iconos-derecha">
+                    <i class="fas fa-search"></i>
+                    <i class="fas fa-user"></i>
+                    <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+                </div>
+            </div>
+            
+            <nav class="header-main-nav">
+                <ul class="nav-list" id="nav-menu">
+                    <li class="nav-item"><a href="#" onclick="abrirModal('modal-sobre-nosotros', event)">Sobre Nosotros</a></li>
+                    <li class="nav-item">
+                        <a href="#">INMOBILIARIO Y EQUIPOS <i class="fas fa-chevron-down" style="font-size: 10px;"></i></a>
+                        <div class="mega-menu">
+                            <div class="mega-menu-grid">
+                                <div class="mega-col">
+                                    <h6>Ventas superiores</h6>
+                                    <ul>
+                                        <li><a href="#">Blowers®</a></li>
+                                        <li><a href="#">Lavapelos®</a></li>
+                                        <li><a href="#">Sillones®</a></li>
+                                        <li><a href="#">Accesorios ®</a></li>
+                                        <li><a href="#">Planchas®</a></li>
+                                        <li><a href="#">Secadoras®</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mega-col">
+                                    <h6>TODOS LOS BLOWERS</h6>
+                                    <ul>
+                                        <li><a href="#">TAIFF FOX3 GREEN 2200W®</a></li>
+                                        <li><a href="#">TAIFF FOX3 ROJO 2200W®</a></li>
+                                        <li><a href="#">TAIFF FOX3 ROSE 2200W®</a></li>
+                                        <li><a href="#">TAIFF FOX ION 12 2200W®</a></li>
+                                        <li><a href="#">TAIFF TOURMALINE ION 2100W®</a></li>
+                                        <li><a href="#">TAIFF VULCAN 2500W®</a></li>
+                                        <li><a href="#">TAIFF E-MOTION DIGITAL 2500W®</a></li>
+                                        <li><a href="#">SUPER TURBO 3900 2100W®</a></li>
+                                        <li><a href="#">TURBO STRONG 2200W</a></li>
+                                        <li><a href="#">TWIN TURBO 3900 / 3200 / 3600</a></li>
+                                        <li><a href="#">GAMMA + 3500 TPRMALIONIC</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mega-col">
+                                    <h6 class="clickable" onclick="abrirModal('modal-accesorios', event)">ACCESORIOS <i class="fas fa-arrow-right"></i></h6>
+                                    <ul>
+                                        <li><a href="#">Boquillas, Difusor, Pinchos</a></li>
+                                        <li><a href="#">Peines, Rolos, Porta Blowers</a></li>
+                                        <li><a href="#">Toallas, Filtros, Mariposas</a></li>
+                                        <li><a href="#">Pinzas, Productos De Belleza</a></li>
+                                        <li><a href="#">Capas, Tijeras Profesionales</a></li>
+                                        <li><a href="#">Tintes, Canquiñas De Barberia</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mega-col"> 
+                                    <div class="mega-imagen"><img src="width_800.jpg" alt="Barbero Promoción"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#">Otros Productos <i class="fas fa-chevron-down" style="font-size: 10px;"></i></a>
+                        <div class="mega-menu">
+                            <div class="mega-menu-grid">
+                                <div class="mega-col">
+                                    <h6 class="clickable" onclick="abrirModal('modal-planchas', event)">Planchas <i class="fas fa-arrow-right"></i></h6>
+                                    <ul>
+                                        <li><a href="#">BarBieliss PROFESSIONAL</a></li>
+                                        <li><a href="#">BaBylissPRO NANOTITANIUM</a></li>
+                                        <li><a href="#">BaBylissPRO OPTIMA3000</a></li>
+                                        <li><a href="#">REMINGTON RIZOS / PRO THERMA</a></li>
+                                        <li><a href="#">REMINGTON KERATIN THERAPY</a></li>
+                                        <li><a href="#">PROFESSIONAL TAIFF LOOK / TITANIUM</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mega-col">
+                                    <h6 class="clickable" onclick="abrirModal('modal-lavapelos', event)">LavaPelos <i class="fas fa-arrow-right"></i></h6>
+                                    <ul>
+                                        <li><a href="#">Lavapelos de cerámica</a></li>
+                                        <li><a href="#">Lavapelos de fibra</a></li>
+                                        <li><a href="#">Lavapelos Portátiles</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mega-col">
+                                    <h6 class="clickable" onclick="abrirModal('modal-otras-cosas', event)">OTRAS COSAS <i class="fas fa-arrow-right"></i></h6>
+                                    <ul>
+                                        <li><a href="#">Sillones De Barberia / Salon</a></li>
+                                        <li><a href="#">Muebles Para Salon / Barberia</a></li>
+                                        <li><a href="#">Secadores Aereo / Pedestal</a></li>
+                                        <li><a href="#">Estaciones Profesionales</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mega-col">
+                                    <div class="mega-imagen"><img src="width_800.jpg" alt="Equipos de Salón"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item"><a href="#mapa-contacto">Contactos</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="seccion-heroe">
+        <div class="slider-wrapper" id="slider">
+            <div class="slide activo">
+                <img src="unnamed.jpg" alt="Fondo 1">
+                <div class="heroe-contenido"><h1>Equipos<br>Profesionales</h1></div>
+            </div>
+            <div class="slide">
+                <img src="Gemini_Generated_Image_67arwv67arwv67ar (1).png" alt="Fondo 2">
+                <div class="heroe-contenido"><h1>Calidad<br>Garantizada</h1></div>
+            </div>
+            <div class="slide">
+                <img src="babypro.jpg" alt="Fondo 3">
+                <div class="heroe-contenido"><h1>Todo para<br>tu Salón</h1></div>
+            </div>
+            
+            <button class="slider-btn slider-prev" onclick="cambiarSlide(-1)"><i class="fas fa-chevron-left"></i></button>
+            <button class="slider-btn slider-next" onclick="cambiarSlide(1)"><i class="fas fa-chevron-right"></i></button>
+            
+            <div class="slider-dots" id="slider-dots">
+                <div class="dot activo" onclick="irASlide(0)"></div>
+                <div class="dot" onclick="irASlide(1)"></div>
+                <div class="dot" onclick="irASlide(2)"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="seccion-padding bg-blanco">
+        <div class="contenedor">
+            <h2 class="titulo-seccion">CONOCE NUESTROS PRODUCTOS</h2>
+            <div class="cuadricula-3">
+                <div class="cuadro-producto" onclick="abrirModal('modal-blowers')">
+                    <div class="imagen-blanca-interior"><img src="0.webp" alt="TAIFF Fox 3 Gris"></div>
+                    <h3 style="font-size: 1.2rem; margin: 0; font-weight: 600;">TAIFF Fox 3 Gris</h3>
+                </div>
+                <div class="cuadro-producto" onclick="abrirModal('modal-blowers')">
+                    <div class="imagen-blanca-interior"><img src="SECADOR-FOX-ION-3-ROSE-220V-TAIFF-1.webp" alt="TAIFF Fox 3 Rose"></div>
+                    <h3 style="font-size: 1.2rem; margin: 0; font-weight: 600;">TAIFF Fox 3 Rose</h3>
+                </div>
+                <div class="cuadro-producto" onclick="abrirModal('modal-blowers')">
+                    <div class="imagen-blanca-interior"><img src="5306176.webp" alt="TAIFF Fox 3 Verde"></div>
+                    <h3 style="font-size: 1.2rem; margin: 0; font-weight: 600;">TAIFF Fox 3 Verde</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="seccion-padding bg-negro">
+        <div class="contenedor">
+            <h2 class="titulo-seccion" style="color:white;">En Acción</h2>
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/CHe7oNemNmA?playsinline=1&modestbranding=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+
+    <section class="seccion-padding bg-blanco" style="text-align: center;">
+        <div class="contenedor">
+            <h2 class="titulo-seccion">Síguenos en Instagram</h2>
+            <p style="color: var(--gris-oscuro); margin-bottom: 50px; font-size: 16px;">Explora nuestras ofertas y novedades diarias</p>
+            <div class="cuadricula-4">
+                <div class="video-wrapper" style="padding-bottom: 150%;">
+                    <iframe src="https://www.instagram.com/reel/DSFwp6ODmlA/embed" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+                </div>
+                <div class="video-wrapper" style="padding-bottom: 150%;">
+                    <iframe src="https://www.instagram.com/reel/DPUjByaDpS4/embed" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+                </div>
+                <div class="video-wrapper" style="padding-bottom: 150%;">
+                    <iframe src="https://www.instagram.com/reel/DTQRBpDjqbs/embed" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+                </div>
+            </div>
+            <a href="https://www.instagram.com/ryr_beautysupply/?hl=es" target="_blank" style="display: inline-block; background-color: var(--rojo); color: #fff; padding: 15px 40px; border-radius: 30px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 20px;"><i class="fab fa-instagram"></i> Ir a @ryr_beautysupply</a>
+        </div>
+    </section>
+
+    <section id="mapa-contacto" class="seccion-contactos">
+        <div class="tarjeta-contacto">
+            <h2>CONTÁCTANOS</h2>
+            <p><i class="fas fa-map-marker-alt"></i> <span><span class="destacado">Dirección:</span><br>Av. Yapur Dumit Esq, Santiago de los Caballeros 51000</span></p>
+            <p><i class="fas fa-phone-alt"></i> <span><span class="destacado">Teléfono:</span><br>(809) 471-4451</span></p>
+            <p><i class="fas fa-clock"></i> <span><span class="destacado">Horario:</span><br>Abierto desde las 8:30 AM · Cierra a las 6:00 PM</span></p>
+        </div>
+        <iframe class="mapa-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.668582737521!2d-70.7061!3d19.4269!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8eb1c5b8b8b8b8b8%3A0x8eb1c5b8b8b8b8b8!2sAv.%20Yapur%20Dumit%2C%20Santiago%20De%20Los%20Caballeros%2051000%2C%20Dominican%20Republic!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus" allowfullscreen="" loading="lazy"></iframe>
+    </section>
+
+    <footer>
+        <div class="contenedor cuadricula-footer">
+            <div class="col-footer">
+                <img src="width_800.jpg" alt="Logo Footer" style="max-width: 150px; margin-bottom: 20px; filter: grayscale(1) brightness(2);">
+                <p><strong>R&R BEAUTY SUPPLY</strong></p>
+                <p><i class="fas fa-phone"></i> +(809) 471-4451<br><i class="fas fa-envelope"></i> info@ryrbeautysupply.com</p>
+            </div>
+            <div class="col-footer">
+                <h6>SOBRE NOSOTROS</h6>
+                <ul>
+                    <li onclick="abrirModal('modal-sobre-nosotros')">Compañía</li>
+                    <li>R&R BEAUTY SUPPLY: REPUBLICA DOMINICANA</li>
+                </ul>
+            </div>
+            <div class="col-footer">
+                <h6>LEGAL TERMS</h6>
+                <ul><li>Sales conditions</li><li>Privacy Policy</li></ul>
+            </div>
+            <div class="col-footer">
+                <h6>SÍGUENOS EN LAS REDES</h6>
+                <div class="social-iconos">
+                    <a href="https://www.facebook.com/ryrbeautysupply" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/ryr_beautysupply/?hl=es" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@ryrbeautysupply" target="_blank"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/18094714451" class="whatsapp-float" target="_blank" title="Cotiza por WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <div class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()" title="Volver arriba">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <div id="modal-sobre-nosotros" class="modal-oculto">
+        <div class="modal-contenido">
+            <span class="cerrar-modal" onclick="cerrarModal('modal-sobre-nosotros')"><i class="fas fa-times"></i></span>
+            <h2>SOBRE NOSOTROS</h2>
+            <div class="info-bloque">
+                <h3>Nuestra Misión</h3>
+                <p>Proveer a los profesionales de la belleza y salones de estética equipos, herramientas y productos de alta calidad, ofreciendo asesoría, excelente servicio y precios competitivos que impulsen el crecimiento y éxito de nuestros clientes.</p> 
+            </div>
+            <div class="info-bloque">
+                <h3>Nuestra Visión</h3>
+                <p>Ser el Beauty Supply líder en la República Dominicana, reconocido por la calidad de nuestros equipos, la variedad de productos, la innovación y la confianza que brindamos a los profesionales de la belleza.</p> 
+            </div>
+            <div class="info-bloque">
+                <h3>Nuestros Valores</h3>
+                <ul>
+                    <li><i class="fas fa-check-circle" style="color:var(--rojo)"></i> Calidad: Equipos confiables para el trabajo.</li>
+                    <li><i class="fas fa-check-circle" style="color:var(--rojo)"></i> Compromiso: Satisfacer las necesidades de cada cliente.</li>
+                    <li><i class="fas fa-check-circle" style="color:var(--rojo)"></i> Honestidad: Transparencia en nuestras ventas.</li>
+                    <li><i class="fas fa-check-circle" style="color:var(--rojo)"></i> Responsabilidad: Cumplimos con los compromisos.</li>
+                    <li><i class="fas fa-check-circle" style="color:var(--rojo)"></i> Innovación: Nuevas herramientas y tendencias.</li>
+                    <li><i class="fas fa-check-circle" style="color:var(--rojo)"></i> Respeto: Valoramos a clientes y colaboradores.</li>
+                </ul> 
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-blowers" class="modal-oculto">
+        <div class="modal-contenido modal-contenido-oscuro">
+            <span class="cerrar-modal" onclick="cerrarModal('modal-blowers')"><i class="fas fa-times"></i></span>
+            <h2>CATÁLOGO DE BLOWERS</h2>
+            <div class="mas-vendido-grid">
+                <div class="mas-vendido-item"><img src="0.webp" alt="Gris"><h3>TAIFF Fox 3 Gris</h3></div>
+                <div class="mas-vendido-item"><img src="rose 3.jpg" alt="Rosa"><h3>TAIFF Fox 3 Rose</h3></div>
+                <div class="mas-vendido-item"><img src="verde 2.jpg" alt="Verde"><h3>TAIFF Fox 3 Verde</h3></div>
+                <div class="mas-vendido-item"><img src="WhatsApp Image 2026-03-19 at 10.14.51.jpeg" alt="Rojo"><h3>TAIFF Fox 3 Rojo</h3></div>
+                <div class="mas-vendido-item"><img src="TWINTURBO 3200.jpg" alt="Twin"><h3>Twin turbo 3200®</h3></div>
+                <div class="mas-vendido-item"><img src="TWINTURBO.webp" alt="Twin"><h3>Twin turbo 3900®</h3></div>
+                <div class="mas-vendido-item"><img src="FOX ION3.jpg" alt="Ion"><h3>Taiff fox ion 3®</h3></div>
+                <div class="mas-vendido-item"><img src="vulcan 2.jpg" alt="Vulcan"><h3>Vulcan 2500 W®</h3></div>
+                <div class="mas-vendido-item"><img src="Tourmaline 2.jpg" alt="Tourmaline"><h3>Tourmaline 2100 W ®</h3></div>
+                <div class="mas-vendido-item"><img src="emotions.webp" alt="Emotions"><h3>E-motions 2500 W Digital®</h3></div>
+                <div class="mas-vendido-item"><img src="turbo strong negro.jpg" alt="Turbo Strong Negro"><h3>Turbo Strong Negro</h3></div>
+                <div class="mas-vendido-item"><img src="twin turbo 2600.avif" alt="Twin Turbo 2600"><h3>Twin Turbo 2600</h3></div>
+                <div class="mas-vendido-item"><img src="super turbo 3900.jpg" alt="Super Turbo 3900"><h3>Super Turbo 3900</h3></div>
+                <div class="mas-vendido-item"><img src="turbo 1500.avif" alt="Turbo 1500"><h3>Turbo 1500</h3></div>
+                <div class="mas-vendido-item"><img src="super turbo 3800.jpg" alt="Turbo 4300"><h3>Turbo 4300</h3></div>
+                <div class="mas-vendido-item"><img src="3500tormalionic_nero.webp" alt="Gamma+ 3500 Tormalionic"><h3>Gamma+ 3500 Tormalionic</h3></div>
+                <div class="mas-vendido-item"><img src="3800.avif" alt="Twin Turbo 3800"><h3>Twin Turbo 3800</h3></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-accesorios" class="modal-oculto">
+        <div class="modal-contenido modal-contenido-oscuro">
+            <span class="cerrar-modal" onclick="cerrarModal('modal-accesorios')"><i class="fas fa-times"></i></span>
+            <h2>ACCESORIO</h2>
+            <div class="mas-vendido-grid">
+                <div class="mas-vendido-item"><h3>Boquillas</h3></div>
+                <div class="mas-vendido-item"><h3>Difusor</h3></div>
+                <div class="mas-vendido-item"><h3>Pinchos</h3></div>
+                <div class="mas-vendido-item"><h3>Peines</h3></div>
+                <div class="mas-vendido-item"><h3>Rolos</h3></div>
+                <div class="mas-vendido-item"><h3>Porta Blowers</h3></div>
+                <div class="mas-vendido-item"><h3>Toallas</h3></div>
+                <div class="mas-vendido-item"><h3>Filtros</h3></div>
+                <div class="mas-vendido-item"><h3>Mariposas</h3></div>
+                <div class="mas-vendido-item"><h3>Pinzas</h3></div>
+                <div class="mas-vendido-item"><h3>Capas</h3></div>
+                <div class="mas-vendido-item"><h3>Tijeras Profesionales</h3></div>
+                <div class="mas-vendido-item"><h3>Tintes</h3></div>
+                <div class="mas-vendido-item"><h3>Estaciones</h3></div>
+            </div>
+        </div>
+    </div>
+
+
+     <div id="modal-productos del cabello" class="modal-oculto">
+        <div class="modal-contenido modal-contenido-oscuro">
+            <span class="cerrar-modal" onclick="cerrarModal('modal-productos del cabello')"><i class="fas fa-times"></i></span>
+            <h2>PRODUCTOS PARA EL CUIDADO DEL CABELLO</h2>
+            <div class="mas-vendido-grid">
+                <div class="mas-vendido-item"><h3>TINTE SALERM</h3></div>
+                <div class="mas-vendido-item"><h3>TINTE TOYUO</h3></div>
+                <div class="mas-vendido-item"><h3>SHAMPOO DOMANEL</h3></div>
+                <div class="mas-vendido-item"><h3>MASCARRILLA DOMANEL</h3></div>
+                <div class="mas-vendido-item"><h3>GOTAS DOMANEL</h3></div>
+                <div class="mas-vendido-item"><h3>CONDITIONER DOMANEL</h3></div>
+                <div class="mas-vendido-item"><h3>GOTERO DOMANEL</h3></div>
+                <div class="mas-vendido-item"><h3>LEAVEN DOMANEL</h3></div>
+                <div class="mas-vendido-item"><h3>Mariposas</h3></div>
+                <div class="mas-vendido-item"><h3>Pinzas</h3></div>
+                <div class="mas-vendido-item"><h3>Capas</h3></div>
+                <div class="mas-vendido-item"><h3>Tijeras Profesionales</h3></div>
+                <div class="mas-vendido-item"><h3>Tintes</h3></div>
+                <div class="mas-vendido-item"><h3>Estaciones</h3></div>
+            </div>
+        </div>
+    </div>
+
+      
+      
+
+
+    <div id="modal-planchas" class="modal-oculto">
+        <div class="modal-contenido modal-contenido-oscuro">
+            <span class="cerrar-modal" onclick="cerrarModal('modal-planchas')"><i class="fas fa-times"></i></span>
+            <h2>NUESTRO CATÁLOGO DE PLANCHAS</h2>
+            <div class="mas-vendido-grid">
+                <div class="mas-vendido-item"><img src="BABYLISS PROFESSIONAL.jpg" alt="Plancha"><h3>BarBieliss PROFESSIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="BABYLISS NANOTITANIUM.avif" alt="Plancha"><h3>BaBylissPRO NANOTITANIUM</h3></div>
+                <div class="mas-vendido-item"><img src="BaBylissPRO® Plancha Nano Titanium XL.jpg" alt="Plancha"><h3>BaBylissPRO NANOTITANIUM XL</h3></div>
+                <div class="mas-vendido-item"><img src="babylisss nanotitanium optima 3000.webp" alt="Plancha"><h3>BaBylissPRO OPTIMA3000</h3></div>
+                <div class="mas-vendido-item"><img src="remington exclusiva para rizo.png" alt="Plancha"><h3>REMINGTON EXCLUSIVA PARA RIZOS</h3></div>         
+                <div class="mas-vendido-item"><img src="remington pro therma luxe.jpg" alt="Plancha"><h3>REMINGTON PRO THERMA-LUXE</h3></div>
+                <div class="mas-vendido-item"><img src="remington keratin therapy.png" alt="Plancha"><h3>REMINGTON KERATIN THERAPY</h3></div>
+                <div class="mas-vendido-item"><img src="professional taiff look.webp" alt="Plancha"><h3>PROFESSIONAL TAIFF LOOK</h3></div>       
+                <div class="mas-vendido-item"><img src="professional taiff titanium.jpg" alt="Plancha"><h3>PROFESSIONAL TAIFF TITANIUM 450</h3></div>  
+                <div class="mas-vendido-item"><img src="remington one.png" alt="Remington One"><h3>Remington One</h3></div>
+                <div class="mas-vendido-item"><img src="remington wet2.jpg" alt="Remington Wet2Straight"><h3>Remington Wet2Straight</h3></div>
+                <div class="mas-vendido-item"><img src="almendra radiance.jpg" alt="Remington Almendra Radiance"><h3>Remington Almendra Radiance</h3></div>
+                <div class="mas-vendido-item"><img src="plancha aguacate.jpg" alt="Remington Shine Therapy Aguacate"><h3>Remington Shine Therapy (Aguacate)</h3></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-lavapelos" class="modal-oculto">
+        <div class="modal-contenido modal-contenido-oscuro">
+            <span class="cerrar-modal" onclick="cerrarModal('modal-lavapelos')"><i class="fas fa-times"></i></span>
+            <h2>NUESTRO CATÁLOGO DE LAVAPELOS</h2>
+            <div class="mas-vendido-grid">
+                <div class="mas-vendido-item"><img src="lava1.jpeg" alt="Lavapelos 1"><h3>Lavapelos de Lujo</h3></div>
+                <div class="mas-vendido-item"><img src="lava2.jpeg" alt="Lavapelos 2"><h3>Lavapelos Reclinable Negro</h3></div>
+                <div class="mas-vendido-item"><img src="lava3.jpeg" alt="Lavapelos 3"><h3>Lavapelos Reclinable Blanco</h3></div>
+                <div class="mas-vendido-item"><img src="lava4.jpeg" alt="Lavapelos 4"><h3>Lavapelos Blanco con Plata</h3></div>
+                <div class="mas-vendido-item"><img src="lava5.jpeg" alt="Lavapelos 5"><h3>Lavapelos Negro Clásico</h3></div>
+                <div class="mas-vendido-item"><img src="lava6.jpeg" alt="Lavapelos 6"><h3>Lavapelos Gris con Dorado</h3></div>
+                <div class="mas-vendido-item"><img src="lava7.jpeg" alt="Lavapelos 7"><h3>Lavapelos Curvo Negro/Dorado</h3></div>
+                <div class="mas-vendido-item"><img src="lava8.jpeg" alt="Lavapelos 8"><h3>Lavapelos Curvo Negro/Plata</h3></div>
+                <div class="mas-vendido-item"><img src="lava9.jpeg" alt="Lavapelos 9"><h3>Lavapelos Minimalista</h3></div>
+                <div class="mas-vendido-item"><img src="lava10.jpeg" alt="Lavapelos 10"><h3>Lavapelos Cuadrado Bicolor</h3></div>
+                <div class="mas-vendido-item"><img src="lava11.jpeg" alt="Lavapelos 11"><h3>Lavapelos 11</h3></div>
+                <div class="mas-vendido-item"><img src="lava12.jpeg" alt="Lavapelos 12"><h3>Lavapelos 12</h3></div>
+                <div class="mas-vendido-item"><img src="lava13.jpeg" alt="Lavapelos 13"><h3>Lavapelos 13</h3></div>
+                <div class="mas-vendido-item"><img src="lavapeloportatil.jpg" alt="Lavapelo portatil"><h3>Lavapelos 14 (Portátil)</h3></div>
+                <div class="mas-vendido-item"><img src="juego1.jpg" alt="Lavapelos 14"><h3>Juego 1</h3></div>
+                <div class="mas-vendido-item"><img src="juego2.jpg" alt="Lavapelos 14"><h3>Juego 2</h3></div>
+                <div class="mas-vendido-item"><img src="lava14.jpg" alt="Lavapelos 14"><h3>Lava 14</h3></div>
+                <div class="mas-vendido-item"><img src="lava20.jpg" alt="Lavapelos 14"><h3>Lava 20</h3></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-otras-cosas" class="modal-oculto">
+        <div class="modal-contenido modal-contenido-oscuro">
+            <span class="cerrar-modal" onclick="cerrarModal('modal-otras-cosas')"><i class="fas fa-times"></i></span>
+            <h2>MUEBLES Y MÁS</h2>
+            <div class="mas-vendido-grid">
+                <div class="mas-vendido-item"><img src="sillon de barberia.avif" alt="Sillón de Barbería"><h3>Sillón de Barbería Dorado</h3></div>
+                
+                <div class="mas-vendido-item"><img src="sillonS1.jpg" alt="Articulo 1"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS2.jpg" alt="Articulo 2"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS3.jpg" alt="Articulo 3"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS4.jpg" alt="Articulo 4"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS5R.jpg" alt="Articulo 5"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS6R.jpg" alt="Articulo 6"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS7.jpg" alt="Articulo 7"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS8.jpg" alt="Articulo 8"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS9.jpg" alt="Articulo 9"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS10.jpg" alt="Articulo 10"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS11.jpg" alt="Articulo 11"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS12.jpg" alt="Articulo 12"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS13.jpg" alt="Articulo 13"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS14.jpg" alt="Articulo 14"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS15.jpg" alt="Articulo 15"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS16.jpg" alt="Articulo 16"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS17.jpg" alt="Articulo 17"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS18.jpg" alt="Articulo 18"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS19.jpg" alt="Articulo 19"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS20.jpg" alt="Articulo 20"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS21.jpg" alt="Articulo 21"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS22.jpg" alt="Articulo 22"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS23.jpg" alt="Articulo 23"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillon24.jpg" alt="Articulo 24"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillon25.jpg" alt="Articulo 25"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS26.jpg" alt="Articulo 26"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS27.jpg" alt="Articulo 27"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS28.jpg" alt="Articulo 28"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS29.jpg" alt="Articulo 29"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="sillonS30.jpg" alt="Articulo 30"><h3>SILLON PROFESIONAL</h3></div>
+                <div class="mas-vendido-item"><img src="secador01.jpg" alt="Articulo 31"><h3>Articulo 31</h3></div>
+                <div class="mas-vendido-item"><img src="SECADOR TURBO.jpg" alt="Articulo 32"><h3>Articulo 32</h3></div>
+                <div class="mas-vendido-item"><img src="estacion1.jpg" alt="Articulo 33"><h3>Articulo 33</h3></div>
+                <div class="mas-vendido-item"><img src="estacion2.jpg" alt="Articulo 34"><h3>Articulo 34</h3></div>
+                <div class="mas-vendido-item"><img src="estacion3.jpg" alt="Articulo 35"><h3>Articulo 35</h3></div>
+                <div class="mas-vendido-item"><img src="estacion4.jpg" alt="Articulo 36"><h3>Articulo 36</h3></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Navegación Header Sticky ---
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            
+            // Header
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+
+            // Boton Volver arriba
+            if (window.scrollY > 400) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        // Función Volver Arriba
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // --- Menú Móvil ---
+        function toggleMenu() {
+            document.getElementById('nav-menu').classList.toggle('active');
+        }
+
+        // --- Sistema de Modales Unificado ---
+        function abrirModal(id, event) {
+            if(event) event.preventDefault();
+            const modal = document.getElementById(id);
+            modal.style.display = "block";
+            document.body.style.overflow = "hidden"; // Quita el scroll de fondo
+        }
+
+        function cerrarModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = "none";
+            document.body.style.overflow = "auto"; // Devuelve el scroll
+        }
+
+        // Cierra al hacer clic afuera
+        window.onclick = function(event) {
+            const modales = document.querySelectorAll('.modal-oculto');
+            modales.forEach(modal => {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                    document.body.style.overflow = "auto";
+                }
+            });
+        }
+
+        // --- Sistema de Slider JS ---
+        let slideActual = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+        let slideIntervalo;
+
+        function inicializarSlider() {
+            if(slides.length > 0) {
+                slideIntervalo = setInterval(() => cambiarSlide(1), 6000); 
+            }
+        }
+
+        function mostrarSlide(index) {
+            slides.forEach(s => s.classList.remove('activo'));
+            dots.forEach(d => d.classList.remove('activo'));
+            
+            slides[index].classList.add('activo');
+            if(dots[index]) dots[index].classList.add('activo');
+        }
+
+        function cambiarSlide(direccion) {
+            slideActual += direccion;
+            if (slideActual >= slides.length) slideActual = 0;
+            if (slideActual < 0) slideActual = slides.length - 1;
+            mostrarSlide(slideActual);
+            reiniciarIntervalo();
+        }
+
+        function irASlide(index) {
+            slideActual = index;
+            mostrarSlide(slideActual);
+            reiniciarIntervalo();
+        }
+
+        function reiniciarIntervalo() {
+            clearInterval(slideIntervalo);
+            slideIntervalo = setInterval(() => cambiarSlide(1), 6000);
+        }
+
+        document.addEventListener('DOMContentLoaded', inicializarSlider);
+    </script>
+</body>
+</html>
